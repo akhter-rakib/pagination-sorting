@@ -48,4 +48,17 @@ public class ProductService {
                 : Sort.by(sortColumn).descending();
         return repository.findAll(sort);
     }
+
+    public List<Product> getPaginationAndSortedData(int pageNo, int pageSize, String sortedBy, String sortedDirection) {
+
+        String sortDir = !sortedDirection.isBlank() ? Sort.Direction.ASC.name() : Sort.Direction.DESC.name();
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortedBy).ascending()
+                : Sort.by(sortedBy).descending();
+        Pageable page = PageRequest.of(pageNo, pageSize, sort);
+        Page<Product> pageValue = repository.findAll(page);
+        if (pageValue.hasContent()) {
+            return pageValue.getContent();
+        }
+        return null;
+    }
 }

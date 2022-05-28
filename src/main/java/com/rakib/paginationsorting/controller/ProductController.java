@@ -4,6 +4,8 @@ import com.rakib.paginationsorting.dto.APIResponse;
 import com.rakib.paginationsorting.entity.Product;
 import com.rakib.paginationsorting.service.ProductService;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -40,5 +42,14 @@ public class ProductController {
                                                          @RequestParam Optional<String> sortDirection) {
         List<Product> products = service.findProductWithSorting(field, sortDirection);
         return new APIResponse<>(products.size(), products);
+    }
+
+    public ResponseEntity<List<Product>> getPaginationAndSortedData(@RequestParam(defaultValue = "0") int pageNo,
+                                                                    @RequestParam(defaultValue = "10") int pageSize,
+                                                                    @RequestParam(defaultValue = "id") String sortedBy,
+                                                                    @RequestParam(defaultValue = "DESC") String sortedDirection) {
+        List<Product> productList = service.getPaginationAndSortedData(pageNo, pageSize, sortedBy, sortedDirection);
+        return new ResponseEntity<>(productList, HttpStatus.OK);
+
     }
 }
